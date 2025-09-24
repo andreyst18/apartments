@@ -1,0 +1,30 @@
+@import "./fonts.css";
+@import "./reset.css";
+
+body {
+  font-family: "PTRootUIWebRegular";
+  color: #0b1739;
+}
+
+h1 {
+  font-family: "PTRootUIWebBold";
+  font-size: 54px;
+}
+
+.wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 96px 80px;
+}
+
+.text-secondary {
+  opacity: 0.5;
+}
+
+.text-medium {
+  font-family: "PTRootUIWebMedium";
+}
+
+.text-active-filter {
+  color: #3eb57c;
+}
