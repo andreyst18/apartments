@@ -1,5 +1,7 @@
 <template>
   <div>
-    <base-page />
+    <UApp>
+      <base-page />
+    </UApp>
   </div>
 </template>

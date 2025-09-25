@@ -26,7 +26,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(apartmentItem) in apartments" :key="title">
+        <tr v-for="(apartmentItem) in filteredApartments" :key="title">
           <td v-for="(value, key) in apartmentItem" :key="value + key">
             <nuxt-img v-if="key === 'planImage'" :src="`/images/${value}.svg`" width="80" height="80"></nuxt-img>
             <span v-else-if="key == 'title'" class="text-medium">{{ value }}</span>
@@ -45,17 +45,16 @@
 
 <script setup>
 
-import { ref, onMounted } from 'vue';
+// import { ref, onMounted } from 'vue';
 
 const store = useStore()
 const { fetchApartments } = store
-const { apartments, sortingParameter } = storeToRefs(store)
+const { apartments, filteredApartments, sortingParameter } = storeToRefs(store)
 
 const amountFloors = ref(17)
 
 onMounted(() => {
   fetchApartments()
-  // console.log(JSON.stringify(apartmentsData))
 })
 </script>
 

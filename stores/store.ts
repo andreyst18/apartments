@@ -3,9 +3,15 @@ import type {Apartment}  from '../types/types'
 export const useStore = defineStore('store', () => {
    //State
    const apartments = ref<Apartment[]>([])
+   const filteredApartments = ref<Apartment[]>([])
 
    const sortingParameter = ref('')
    const sortingType = ref('')
+   const priceFilterRange = ref<number[]>([])
+   const sizeFilterRange = ref<number[]>([])
+
+   const activeFilter = ref({})
+   
 
 
    //Actions
@@ -13,8 +19,9 @@ export const useStore = defineStore('store', () => {
     try {
       const response = await fetch('/data/data-2.json')
       const data = await response.json()
-      console.log(data)
       apartments.value = data
+      filteredApartments.value = [...apartments.value]
+      getFilterRange()
     } catch(error) {
       console.log(error)
     }
@@ -44,5 +51,30 @@ export const useStore = defineStore('store', () => {
       
    }
 
-  return {apartments, fetchApartments, sortList, sortingParameter, sortingType}
+   function getFilterRange() {
+    const apartmentsCopy = [...apartments.value]
+    //price
+    apartmentsCopy.sort((a, b) => a.price - b.price)
+    priceFilterRange.value.push(apartmentsCopy[0].price)
+    priceFilterRange.value.push(apartmentsCopy[apartmentsCopy.length - 1].price)
+    
+    //size
+    apartmentsCopy.sort((a, b) => a.size - b.size)
+    sizeFilterRange.value.push(apartmentsCopy[0].size)
+    sizeFilterRange.value.push(apartmentsCopy[apartmentsCopy.length - 1].size)
+  }
+
+  function filterByRooms(roomsValue: string) {
+    filteredApartments.value = [...apartments.value]
+    filteredApartments.value = filteredApartments.value.filter(el => el.title[0] == roomsValue)
+  }
+
+  function filterByPrice(min: number, max: number) {
+    filteredApartments.value = [...apartments.value]
+    console.log(min)
+    filteredApartments.value = filteredApartments.value.filter(el => el.price >= min && el.price <= max)
+  }
+
+
+  return {apartments, fetchApartments, sortList, sortingParameter, sortingType, priceFilterRange, sizeFilterRange, getFilterRange, filterByRooms, filteredApartments, filterByPrice}
 })

@@ -7,10 +7,13 @@ export default defineNuxtConfig({
     '@/assets/css/main.css'
   ],
 
-  modules: ['@nuxt/image', '@pinia/nuxt'],
+  modules: ['@nuxt/image', '@pinia/nuxt', '@nuxt/ui'],
   imports: {
     dirs: [
       'stores',
     ]
   },
+   ui: {
+    colorMode: false
+  }
 })

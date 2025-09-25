@@ -1,6 +1,10 @@
 @import "./fonts.css";
 @import "./reset.css";
 
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+
 body {
   font-family: "PTRootUIWebRegular";
   color: #0b1739;
@@ -27,4 +31,8 @@ h1 {
 
 .text-active-filter {
   color: #3eb57c;
+}
+
+ul {
+  list-style: none;
 }
