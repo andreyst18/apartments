@@ -4,7 +4,6 @@
       <div>
         <h1>Квартиры</h1>
         <ApartmentsList />
-
       </div>
       <div>
         <ApartmentsFilter />
@@ -13,8 +12,7 @@
   </div>
 </template>
 
-<script setup>
-</script>
+<script setup></script>
 
 <style lang="scss" scoped>
 .base-page {

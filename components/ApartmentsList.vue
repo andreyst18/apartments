@@ -26,15 +26,22 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(apartmentItem) in filteredApartments" :key="title">
+        <tr v-for="apartmentItem in filteredApartments" :key="apartmentItem.title">
           <td v-for="(value, key) in apartmentItem" :key="value + key">
             <nuxt-img v-if="key === 'planImage'" :src="`/images/${value}.svg`" width="80" height="80"></nuxt-img>
-            <span v-else-if="key == 'title'" class="text-medium">{{ value }}</span>
-            <span v-else-if="key == 'size'">{{ String(value).replace('.', ',') }}</span>
-            <span v-else-if="key == 'floor'"><span>{{ value.split(' ')[0] }}</span><span class="text-secondary">{{ ` из
+            <span v-else-if="key == 'title'" class="text-medium">{{
+              value
+            }}</span>
+            <span v-else-if="key == 'size'">{{
+              String(value).replace('.', ',')
+            }}</span>
+            <span v-else-if="key == 'floor'"><span>{{ value.split(' ')[0] }}</span><span class="text-secondary">{{
+              ` из
                 ${amountFloors}`
                 }}</span></span>
-            <span v-else-if="key == 'price'">{{ value.toLocaleString('ru-RU') }}</span>
+            <span v-else-if="key == 'price'">{{
+              value.toLocaleString('ru-RU')
+            }}</span>
             <span v-else>{{ value }}</span>
           </td>
         </tr>
@@ -44,18 +51,17 @@
 </template>
 
 <script setup>
-
 // import { ref, onMounted } from 'vue';
 
-const store = useStore()
-const { fetchApartments } = store
-const { apartments, filteredApartments, sortingParameter } = storeToRefs(store)
+const store = useStore();
+const { fetchApartments } = store;
+const { apartments, filteredApartments, sortingParameter } = storeToRefs(store);
 
-const amountFloors = ref(17)
+const amountFloors = ref(17);
 
 onMounted(() => {
-  fetchApartments()
-})
+  fetchApartments();
+});
 </script>
 
 <style lang="scss" scoped>

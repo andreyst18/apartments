@@ -1,30 +1,30 @@
 <template>
   <div class="sort-button">
     <button @click="sortList(type, 'asc')">
-      <img class="sort-button__icon" :src="imgPathAsc" alt="">
+      <img class="sort-button__icon" :src="imgPathAsc" alt="" />
     </button>
     <button @click="sortList(type, 'desc')">
-      <img class="sort-button__icon" :src="imgPathDesc" alt="">
+      <img class="sort-button__icon" :src="imgPathDesc" alt="" />
     </button>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed } from 'vue';
 
-const props = defineProps(['type'])
+const props = defineProps(['type']);
 
-const store = useStore()
-const { sortList } = store
-const { sortingType, sortingParameter } = storeToRefs(store)
+const store = useStore();
+const { sortList } = store;
+const { sortingType, sortingParameter } = storeToRefs(store);
 
 const imgPathAsc = computed(() => {
-  return `/svg/sort-btn${sortingType.value == 'asc' && sortingParameter.value == props.type ? '-active' : ''}.svg`
-})
+  return `/svg/sort-btn${sortingType.value == 'asc' && sortingParameter.value == props.type ? '-active' : ''}.svg`;
+});
 
 const imgPathDesc = computed(() => {
-  return `/svg/sort-btn${sortingType.value == 'desc' && sortingParameter.value == props.type ? '-active' : ''}.svg`
-})
+  return `/svg/sort-btn${sortingType.value == 'desc' && sortingParameter.value == props.type ? '-active' : ''}.svg`;
+});
 </script>
 
 <style lang="scss" scoped>
@@ -38,7 +38,8 @@ const imgPathDesc = computed(() => {
     height: 4px;
 
     &--active {
-      filter: invert(52%) sepia(69%) saturate(355%) hue-rotate(99deg) brightness(100%) contrast(92%);
+      filter: invert(52%) sepia(69%) saturate(355%) hue-rotate(99deg)
+        brightness(100%) contrast(92%);
     }
   }
 

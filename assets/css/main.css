@@ -1,17 +1,16 @@
-@import "./fonts.css";
-@import "./reset.css";
+@import './fonts.css';
+@import './reset.css';
 
-@import "tailwindcss";
-@import "@nuxt/ui";
-
+@import 'tailwindcss';
+@import '@nuxt/ui';
 
 body {
-  font-family: "PTRootUIWebRegular";
+  font-family: 'PTRootUIWebRegular';
   color: #0b1739;
 }
 
 h1 {
-  font-family: "PTRootUIWebBold";
+  font-family: 'PTRootUIWebBold';
   font-size: 54px;
 }
 
@@ -22,11 +21,11 @@ h1 {
 }
 
 .text-secondary {
-  opacity: 0.5;
+  color: #797e8e;
 }
 
 .text-medium {
-  font-family: "PTRootUIWebMedium";
+  font-family: 'PTRootUIWebMedium';
 }
 
 .text-active-filter {
@@ -35,4 +34,8 @@ h1 {
 
 ul {
   list-style: none;
+}
+
+button {
+  cursor: pointer;
 }
