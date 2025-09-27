@@ -41,7 +41,7 @@
       </div>
     </div>
 
-    <button class="apartments-filter__reset-btn" @click="resetFilters">
+    <button class="apartments-filter__reset-btn" @click="resetParams">
       <span>Сбросить параметры</span>
       <img src="/public/svg/cross.svg" alt="">
     </button>
@@ -49,10 +49,14 @@
 </template>
 
 <script setup>
+
 const store = useStore();
 
-const { priceFilterRange, sizeFilterRange, filterByRooms, filterByPrice, filterBySize, resetFilters } =
+const { priceFilterRange, sizeFilterRange, filterByRooms, filterByPrice, filterBySize, resetFilters, filterList } =
   store;
+
+const { activeFilter } = storeToRefs(store);
+
 
 const roomsFilter = ref([
   { title: '1к', isActive: false, rooms: '1' },
@@ -95,6 +99,22 @@ const customUi = {
   thumb: 'w-[14px] h-[14px] bg-[#3EB57C] ring-0 outline-none',
 
 }
+
+const resetParams = () => {
+  resetFilters()
+  roomsFilter.value.forEach((elem, i) => (elem.isActive = false));
+  price.value = [...priceFilterRange];
+  size.value = [...sizeFilterRange];
+}
+
+watch(
+  activeFilter,
+  (newVal) => {
+    console.log(newVal)
+    filterList()
+  },
+  { deep: true }
+)
 </script>
 
 <style lang="scss" scoped>

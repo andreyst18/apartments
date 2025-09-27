@@ -1,4 +1,4 @@
-import type { Apartment } from '../types/types';
+import type { Apartment, ActiveFilter } from '../types/types';
 
 export const useStore = defineStore('store', () => {
   //State
@@ -10,7 +10,11 @@ export const useStore = defineStore('store', () => {
   const priceFilterRange = ref<number[]>([]);
   const sizeFilterRange = ref<number[]>([]);
 
-  const activeFilter = ref({});
+  const activeFilter = ref<ActiveFilter>({
+    rooms: '',
+    price: { min: 0, max: 0 },
+    size: { min: 0, max: 0 },
+  });
 
   //Actions
   async function fetchApartments() {
@@ -68,28 +72,43 @@ export const useStore = defineStore('store', () => {
   }
 
   function filterByRooms(roomsValue: string) {
-    filteredApartments.value = [...apartments.value];
-    filteredApartments.value = filteredApartments.value.filter(
-      (el) => el.title[0] == roomsValue
-    );
+    activeFilter.value.rooms = roomsValue;
   }
 
   function filterByPrice(min: number, max: number) {
-    filteredApartments.value = [...apartments.value];
-    filteredApartments.value = filteredApartments.value.filter(
-      (el) => el.price >= min && el.price <= max
-    );
+    activeFilter.value.price = { min, max };
   }
 
   function filterBySize(min: number, max: number) {
-    filteredApartments.value = [...apartments.value];
-    filteredApartments.value = filteredApartments.value.filter(
-      (el) => el.size >= min && el.size <= max
-    );
+    activeFilter.value.size = { min, max };
+  }
+
+  function filterList() {
+    filteredApartments.value = apartments.value.filter((el) => {
+      const roomFilterPass =
+        activeFilter.value.rooms.length > 0
+          ? el.title[0] === activeFilter.value.rooms
+          : true;
+
+      const priceFilterPass =
+        el.price >= activeFilter.value.price.min &&
+        el.price <= activeFilter.value.price.max;
+
+      const sizeFilterPass =
+        el.size >= activeFilter.value.size.min &&
+        el.size <= activeFilter.value.size.max;
+
+      return roomFilterPass && priceFilterPass && sizeFilterPass;
+    });
   }
 
   function resetFilters() {
-    filteredApartments.value = [...apartments.value];
+    console.log('reset 1');
+    activeFilter.value = {
+      rooms: '',
+      price: { min: priceFilterRange.value[0], max: priceFilterRange.value[1] },
+      size: { min: sizeFilterRange.value[0], max: sizeFilterRange.value[1] },
+    };
   }
 
   return {
@@ -106,5 +125,7 @@ export const useStore = defineStore('store', () => {
     filterByPrice,
     filterBySize,
     resetFilters,
+    activeFilter,
+    filterList,
   };
 });
