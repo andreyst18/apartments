@@ -9,6 +9,7 @@
         <ApartmentsFilter />
       </div>
     </div>
+    <ScrollBtn />
   </div>
 </template>
 
@@ -19,6 +20,10 @@
   &__row {
     display: flex;
     gap: 80px;
+
+    @media (max-width: $breakpoint-xl) {
+      gap: 28px;
+    }
 
     & div:nth-child(1) {
       flex: 2;
@@ -32,5 +37,7 @@
       margin-bottom: 48px;
     }
   }
+
+
 }
 </style>

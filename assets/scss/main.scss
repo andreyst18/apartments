@@ -1,0 +1,43 @@
+@use './fonts.scss';
+@use './reset.scss';
+@use './variables.scss';
+
+:root {
+  --breakpoint-xl: 1440px;
+}
+
+body {
+  font-family: 'PTRootUIWebRegular';
+  color: #0b1739;
+}
+
+h1 {
+  font-family: 'PTRootUIWebBold';
+  font-size: 54px;
+}
+
+.wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 96px 80px;
+}
+
+.text-secondary {
+  color: #797e8e;
+}
+
+.text-medium {
+  font-family: 'PTRootUIWebMedium';
+}
+
+.text-active-filter {
+  color: #3eb57c;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  cursor: pointer;
+}

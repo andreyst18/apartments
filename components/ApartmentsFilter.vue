@@ -5,7 +5,8 @@
         <button :class="[
           'apartments-filter__rooms-btn',
           { 'apartments-filter__rooms-btn--active': item.isActive },
-        ]" @click="toggleRoomsFilter(index)">
+          { 'apartments-filter__rooms-btn--disabled': item.disabled },
+        ]" @click="toggleRoomsFilter(index)" :disabled="item.disabled">
           {{ item.title }}
         </button>
       </li>
@@ -52,17 +53,17 @@
 
 const store = useStore();
 
-const { priceFilterRange, sizeFilterRange, filterByRooms, filterByPrice, filterBySize, resetFilters, filterList } =
+const { priceFilterRange, sizeFilterRange, filterByRooms, filterByPrice, filterBySize, resetFilters, filterList, fetchApartments } =
   store;
 
 const { activeFilter } = storeToRefs(store);
 
 
 const roomsFilter = ref([
-  { title: '1к', isActive: false, rooms: '1' },
-  { title: '2к', isActive: false, rooms: '2' },
-  { title: '3к', isActive: false, rooms: '3' },
-  { title: '4к', isActive: false, rooms: '4' },
+  { title: '1к', isActive: false, rooms: '1', disabled: false },
+  { title: '2к', isActive: false, rooms: '2', disabled: false },
+  { title: '3к', isActive: false, rooms: '3', disabled: false },
+  { title: '4к', isActive: false, rooms: '4', disabled: true },
 ]);
 
 const toggleRoomsFilter = (index) => {
@@ -74,13 +75,13 @@ const price = ref([0, 0]);
 const size = ref([0, 0]);
 
 watch(priceFilterRange, () => {
-  if (priceFilterRange.length == 2) {
+  if (!stored.value && priceFilterRange.length == 2) {
     price.value = [...priceFilterRange];
   }
 });
 
 watch(sizeFilterRange, () => {
-  if (sizeFilterRange.length == 2) {
+  if (!stored.value && sizeFilterRange.length == 2) {
     size.value = [...sizeFilterRange];
   }
 });
@@ -109,12 +110,35 @@ const resetParams = () => {
 
 watch(
   activeFilter,
-  (newVal) => {
-    console.log(newVal)
+  () => {
     filterList()
+    console.log(store)
+    localStorage.setItem('userStore', JSON.stringify(store))
   },
   { deep: true }
 )
+
+const stored = ref(null)
+
+onMounted(async () => {
+  stored.value = localStorage.getItem('userStore')
+  if (stored.value) {
+    const savedStore = JSON.parse(stored.value)
+    //rooms
+    activeFilter.value = savedStore.activeFilter
+    toggleRoomsFilter(savedStore.activeFilter.rooms ? savedStore.activeFilter.rooms - 1 : '')
+    //price
+    price.value[0] = savedStore.activeFilter.price.min
+    price.value[1] = savedStore.activeFilter.price.max
+    //size
+    size.value[0] = savedStore.activeFilter.size.min
+    size.value[1] = savedStore.activeFilter.size.max
+
+    console.log(2)
+    await fetchApartments()
+    filterList()
+  }
+})
 </script>
 
 <style lang="scss" scoped>
@@ -126,6 +150,10 @@ watch(
   display: flex;
   flex-direction: column;
   gap: 24px;
+
+  @media (max-width: $breakpoint-xl) {
+    padding: 20px;
+  }
 
   &__rooms {
     display: flex;
@@ -140,11 +168,23 @@ watch(
     border-color: transparent;
     outline: none;
     cursor: pointer;
+    transition: all 250ms ease;
+
 
     &--active {
       background-color: #3eb57c;
       color: #fff;
       box-shadow: 0px 6px 20px 0px rgba(149, 208, 161, 1);
+    }
+
+    &--disabled {
+      color: rgba(121, 126, 142, 0.2);
+      cursor: auto;
+    }
+
+    &:hover {
+      box-shadow: 0px 6px 20px 0px rgba(149, 208, 161, 1);
+
     }
   }
 
@@ -170,7 +210,16 @@ watch(
     display: flex;
     gap: 8px;
     padding-left: 16px;
+    outline: none;
 
+    &:hover {
+      color: #fff;
+
+      img {
+        filter: brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7469%) hue-rotate(33deg) brightness(98%) contrast(110%);
+      }
+
+    }
   }
 
 }

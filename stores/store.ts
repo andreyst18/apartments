@@ -3,7 +3,9 @@ import type { Apartment, ActiveFilter } from '../types/types';
 export const useStore = defineStore('store', () => {
   //State
   const apartments = ref<Apartment[]>([]);
+  const chunkedApartments = ref<Apartment[]>([]);
   const filteredApartments = ref<Apartment[]>([]);
+  const lastIndex = ref(0);
 
   const sortingParameter = ref('');
   const sortingType = ref('');
@@ -22,7 +24,9 @@ export const useStore = defineStore('store', () => {
       const response = await fetch('/data/data-2.json');
       const data = await response.json();
       apartments.value = data;
-      filteredApartments.value = [...apartments.value];
+      lastIndex.value += 20;
+      console.log(1);
+      chunkedApartments.value = apartments.value.slice(0, lastIndex.value);
       getFilterRange();
     } catch (error) {
       console.log(error);
@@ -57,7 +61,7 @@ export const useStore = defineStore('store', () => {
   }
 
   function getFilterRange() {
-    const apartmentsCopy = [...apartments.value];
+    const apartmentsCopy = [...chunkedApartments.value];
     //price
     apartmentsCopy.sort((a, b) => a.price - b.price);
     priceFilterRange.value.push(apartmentsCopy[0].price);
@@ -84,7 +88,7 @@ export const useStore = defineStore('store', () => {
   }
 
   function filterList() {
-    filteredApartments.value = apartments.value.filter((el) => {
+    filteredApartments.value = chunkedApartments.value.filter((el) => {
       const roomFilterPass =
         activeFilter.value.rooms.length > 0
           ? el.title[0] === activeFilter.value.rooms
@@ -103,12 +107,28 @@ export const useStore = defineStore('store', () => {
   }
 
   function resetFilters() {
-    console.log('reset 1');
     activeFilter.value = {
       rooms: '',
       price: { min: priceFilterRange.value[0], max: priceFilterRange.value[1] },
       size: { min: sizeFilterRange.value[0], max: sizeFilterRange.value[1] },
     };
+
+    sortingParameter.value = '';
+    sortingType.value = '';
+  }
+
+  function downloadMore() {
+    chunkedApartments.value = chunkedApartments.value.concat(
+      apartments.value.slice(lastIndex.value, lastIndex.value + 20)
+    );
+    lastIndex.value += 20;
+    updateList();
+  }
+
+  function updateList() {
+    filteredApartments.value = [...chunkedApartments.value];
+    getFilterRange();
+    filterList();
   }
 
   return {
@@ -127,5 +147,9 @@ export const useStore = defineStore('store', () => {
     resetFilters,
     activeFilter,
     filterList,
+    chunkedApartments,
+    downloadMore,
+    updateList,
+    lastIndex,
   };
 });
